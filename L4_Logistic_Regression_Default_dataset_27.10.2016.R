@@ -43,6 +43,17 @@ abline(logistic_fit,col="blue")
 summary(logistic_fit)
 
 #There are 3 ways to plot the logistic regression
+# Method 1. Plot the dots instead of a smooth curve
+plot(Default$balance,logistic_fit$fit,col="blue",pch=".")
+
+#Method 2. Using the inverse function of the logistic regression. This function takes ^(Beta0 + Beta1X)
+# as an input and returns p(X)
+plot(Default$balance,default_number,col="orange")
+xrange=seq(min(Default$balance),max(Default$balance),length.out=100)
+library(boot)
+lines(xrange,inv.logit(logistic_fit$coefficients[1]+logistic_fit$coefficients[2]*xrange),col="red")
+
+
 
 
 
