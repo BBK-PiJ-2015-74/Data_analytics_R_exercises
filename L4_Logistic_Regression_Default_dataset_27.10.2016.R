@@ -46,12 +46,20 @@ summary(logistic_fit)
 # Method 1. Plot the dots instead of a smooth curve
 plot(Default$balance,logistic_fit$fit,col="blue",pch=".")
 
-#Method 2. Using the inverse function of the logistic regression. This function takes ^(Beta0 + Beta1X)
+# Method 2. Using the inverse function of the logistic regression. This function takes ^(Beta0 + Beta1X)
 # as an input and returns p(X)
 plot(Default$balance,default_number,col="orange")
 xrange=seq(min(Default$balance),max(Default$balance),length.out=100)
 library(boot)
 lines(xrange,inv.logit(logistic_fit$coefficients[1]+logistic_fit$coefficients[2]*xrange),col="red")
+
+# Method 3. Make the prediction using the logistic regression and plot this as a smooth line. 
+# This is the preferred method.
+
+x<-Default$balance
+yrange<-predict(logistic_fit,data.frame(x==xrange),type="response")
+lines(xrange,yrange,col="green")
+
 
 
 
