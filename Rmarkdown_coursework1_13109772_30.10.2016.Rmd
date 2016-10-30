@@ -51,7 +51,7 @@ cat("The mode of x is",mode(x))
 var(x)
 cat("The variance of x is",var(x))
 sd(x)
-cat("The variance of y is",var(x))
+cat("The variance of x is",var(x))
 ```
 
 ####B. Suppose the 10 students have the following ages: 23 25 18 45 30 21 22 19 29 35
