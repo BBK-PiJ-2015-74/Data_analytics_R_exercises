@@ -1,2 +1,5 @@
 # Compiled source code (html) from Rmarkdown files #
 *.html
+
+# Rhistory files which contain information needed to start the R workspace. #
+*.Rhistory
