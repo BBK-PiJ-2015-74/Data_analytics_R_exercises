@@ -23,16 +23,24 @@ table(x)
 #####(i) the mean
 ```{r mean}
 mean(x)
+cat("The mean of x is",mean(x))
 ```
 
 #####(ii) the median
 ```{r median}
 median(x)
+cat("The median of x is",median(x))
 ```
 
 #####(iii) the mode
 ```{r mode}
-mode(x)
+mode <- function(x) {
+    if (is.numeric(x)) {
+        x_table <- table(x)
+        return(as.numeric(names(x_table)[which.max(x_table)]))
+    }
+}
+cat("The mode of x is",mode(x))
 ```
 
 ####Find the following measures of variation:
@@ -41,7 +49,9 @@ mode(x)
 
 ```{r varsd}
 var(x)
+cat("The variance of x is",var(x))
 sd(x)
+cat("The variance of y is",var(x))
 ```
 
 ####B. Suppose the 10 students have the following ages: 23 25 18 45 30 21 22 19 29 35
@@ -143,39 +153,41 @@ The correlation between the crime rate and chas is:
 ```{r chas}
 cor(Boston$crim,Boston$chas)
 ```
+
 The correlation between the crime rate and nox is:
 ```{r nox}
 cor(Boston$crim,Boston$nox)
 ```
+
 The correlation between the crime rate and rm is:
 ```{r rm}
 cor(Boston$crim,Boston$rm)
 ```
+
 The correlation between the crime rate and age is:
 ```{r age}
 cor(Boston$crim,Boston$age)
 ```
+
 The correlation between the crime rate and dis is:
 ```{r dis}
 cor(Boston$crim,Boston$dis)
 ```
 
 There is a significant correlation between crime rate and accessibility to radial highways: 
-cor > 0.5
-A potential explanation of the relationship between crime rate and accessibility to radial highways:
-Crime rates are higher when it's harder to get to work because the access routes to places of work are farther away
-Another reason might be because more these areas are more remote and therefore less well protected.
-This is a hypothesis - further work would be required to more fully understand the reasons.
-See chart below.
+cor > 0.5  
+A potential explanation of the relationship between crime rate and accessibility to radial highways: Crime rates are higher when it's harder to get to work because the access routes to places of work are farther away. Another reason might be because more these areas are more remote and therefore less well protected.  
+This explanation is simply a postulation or a hypothesis - further work would be required to more fully understand the reasons.See chart below for a pairwise scatterplot illustrating the relationship between the two.  
 
 ```{r rad}
 cor(Boston$crim,Boston$rad)
 plot(Boston$crim,Boston$rad,xlab="Crime rate",ylab="Index of accessibility to radial highways",main="Crime rate vs. accessibility to radial highways in suburbs of Boston")
 ```
 
-The correlation between the crime rate and tax is shown below. 
-Hypothesis for the relationship between crime rate and tax: 
-Crime rates are higher in more affluent areas (this is actually the opposite of what I would expect)
+The correlation between the crime rate and tax is shown below.  
+Hypothesis for the relationship between crime rate and tax:  
+Crime rates are higher in more affluent areas (this is actually the opposite of what I would expect).
+
 ```{r tax}
 cor(Boston$crim,Boston$tax)
 plot(Boston$crim,Boston$tax, xlab="Crime rate", ylab="tax rate per $10,000",main="Crime rate vs. tax rate in suburbs of Boston")
@@ -203,9 +215,9 @@ cor(Boston$crim,Boston$medv)
 
 There is a correlation between the crime rate and rad (index of acessibility to radial highways), and the crime rate and tax (tax rate per $10,000) - see possible reasons explained above. The correlation is indicated by a correlation value of > 0.5. There appears to be also some correlation between crime rate and predictors indus, nox and lstat.
 
-(d) Are there any suburbs of Boston with particularly high crime rates? Tax rates? Pupil-teacher ratios? Comment on the range of each predictor.
+#####(d) Are there any suburbs of Boston with particularly high crime rates? Tax rates? Pupil-teacher ratios? Comment on the range of each predictor.
 
-Comment on the range of the per capita crime rate:
+Comment on the range of the per capita crime rate:  
 The median crime rate per capita is 0.26 and the 3rd quartile is 3.68, very close to the mean of 3.61. This means that a small number of outliers is skewing the data, as shown in the plot. Looking at only the suburbs in which the crime rate is > 20 shows that there are 18 suburbs with the crime rate greater than this value. Running the script below shows the suburbs with particularly high crime rates.
 
 ```{r rangecrim}
@@ -217,8 +229,9 @@ newdata
 sum(table(sort(newdata$crim)))
 ```
 
-Comment on the range of the tax rate (shorthand for 'full-value property-tax rate per $10,000): 
-The minimum tax rate is 187.0, the median is 333.0 and the 3rd quartile 666.0. There are only 5 data points above the 3rd quartile, shown in the table below. From looking at the scatterplots of the crime rate and the tax rate against the index, there seems to be a rough correlation between the two, which we can check using the correlation function. Using cor (Boston$crim,Boston$tax) shows a high correlation (0.58) between the two predictors.
+Comment on the range of the tax rate (shorthand for 'full-value property-tax rate per $10,000'):
+
+The minimum tax rate is 187.0, the median is 333.0 and the 3rd quartile 666.0. There are only 5 data points above the 3rd quartile, shown in the table below. From looking at the scatterplots of the crime rate and the tax rate against the index, there seems to be a rough correlation between the two, which we can check using the correlation function. Using cor (Boston\$crim, Boston\$tax) shows a high correlation (0.58) between the two predictors.
 
 ```{r rangetax}
 plot(Boston$tax)
@@ -230,7 +243,7 @@ sum(table(sort(newdata$tax)))
 cor(Boston$crim,Boston$tax)
 ```
 
-Comments on the range of the pupil-teacher ratio:
+Comments on the range of the pupil-teacher ratio:  
 The minimum ratio is 12.6, the maximum is 22, and the median is 19.05, which is quite close to the maximum. There is a low correlation between the crime-rate and the pupil-teacher ratio in the suburbs of Boston.
 
 ```{r rangeptratio}
@@ -244,7 +257,7 @@ sum(table(sort(newdata$ptratio)))
 cor(Boston$crim,Boston$ptratio)
 ```
 
-(e) How many suburbs bound the Charles river?
+#####(e) How many suburbs bound the Charles river?
 35 suburbs bound the Charles river.
 
 ```{r charles}
@@ -255,39 +268,45 @@ newdata <- Boston[which(Boston$chas==1),]
 table(newdata$chas) # there are 35 suburbs which bound the Charles river
 ```
 
-(f) What is the median pupil-teacher ratio among the towns in this data set? 
-median is 19.05
+#####(f) What is the median pupil-teacher ratio among the towns in this data set? 
+The median pupil-teacher ratio is 19.05
 ```{r median ptratio}
 summary(Boston$ptratio)
 ```
 
-(g) Which suburb of Boston has lowest median value of owner occupied homes?  
-What are the values of the other predictors for that suburb, and how do those values compare to the overall ranges for those predictors? Comment on your  findings. 
-Suburbs 399 and 406 have the lowest median value of owner occupied homes.
-The predictors are shown in the table for those suburbs.
+#####(g) Which suburb of Boston has lowest median value of owner occupied homes?  What are the values of the other predictors for that suburb, and how do those values compare to the overall ranges for those predictors? Comment on your findings.  
+
+Suburbs 399 and 406 have the lowest median value of owner occupied homes.  
+We can calculate this by defining a new data table, newdata, and including only the suburbs for which the variable medv is equal to the minimum. We can find the mininum using the summary function.The predictors are shown in the table for those suburbs.
+
 ```{r suburb with lowest medv}
 summary(Boston$medv)
 table(sort(Boston$medv))
 newdata <- Boston[which(Boston$medv==5.0),]
 newdata
+summary(Boston)
 ```
-Comments on the findings for these suburbs, index 399 and 406:
-Crime rates crim are in the 4th quartile, near the maximum
-Zone is 0, at the minimum
-Neither district bounds the Charles river
-Nox is in the 4th quartile (0.693 and 0.693 vs 3rd quartile boundary 0.624)
-rm is in 1st quartile, 5.45 and 5.68 vs 1st quartile boundary 5.886
-age is at the maximum, 100
-dis is in the first quartile, near the minimum at 1.49 and 1.43 (min is 1.13, 1st Quartile 2.10)
-rad is on the third quartile boundary, 24.00, and at the maximum
-tax is on the 3rd quartile boundary, 666 (near the maximum of 711.0)
-ptratio is 20.2, on the 3rd quartile boundary
-black indicator is 396.9 and 384.97, just below the maximum and 3rd quartile boundary
-lstat is 30.59/ 22.98, in the 4th quartile in both cases
-medv is 5, at the minimum
-All these indicators point to indicators of lower quality housing and the very highest crime rates, as well as high pupil-teacher ratios and other indicators which seem to demonstrate that disadvantaged socio-economic groups live in these two particular suburbs.
 
-(h) In this data set, how many of the suburbs average more than seven rooms per  dwelling? How many average more than eight rooms per dwelling? 
+Comments on the findings for these suburbs, index 399 and 406:
+
+Per capita crime rates (crim) are in the 4th quartile, near the maximum.  
+The proportion of residential land zoned for lots over 25,000 sq.ft (zn) is zero, at the minimum for both suburbs.  
+The proportion of non-retail business acres per town (indus) is 18.1, on the 3rd quartile boundary - so both suburbs are heavily industrialised.  
+Neither district bounds the Charles river, indicated by the value of dummary variable (chas).
+The nitrogen oxides concentration (nox) is in the 4th quartile (0.693 and 0.693 vs 3rd quartile boundary 0.624), indicating relatively high levels of air pollution in these suburbs.  
+The average number of rooms per dwelling (rm) is in 1st quartile, 5.45 and 5.68 vs 1st quartile boundary 5.886
+The proportion of owner-occupied units built prior to 1940 is at the maximum, 100, again indicating relatively less wealthy suburbs of Boston.
+The weighted mean of distances to five Boston employment centres (dis) is in the first quartile, near the minimum at 1.49 and 1.43 (min is 1.13, 1st Quartile 2.10), showing that these suburbs are relatively close to employment centres.  
+The index of accessibility to radial highways, rad is on the third quartile boundary/ maximum for both - indicating that both these suburbs are inner city areas.  
+The full-value property tax rate per \$10,000 is on the 3rd quartile boundary, 666 (near the maximum of 711.0).  
+The pupil-teacher ratio is 20.2, on the 3rd quartile boundary, indicating there are a relatively high number of pupils for every teacher, an indicator of poverty.  
+The black indicator (black) is 396.9 and 384.97, just below the maximum and 3rd quartile boundary, indicating there is a high proportion of black people in both suburbs.  
+The lower status of the population, lstat is 30.59/ 22.98, is in the 4th quartile in both suburbs, and has a correlation of 0.46 with crime rate (I'm not sure whether a value at this level indicates whether there is a high level of correlation or not).
+The median value of owner-occupied homes in \$1000s (medv) is 5, at the minimum. This indicates that in these suburbs with high crime rates, the value of owner-occupied homes is among the lowest in the city.  
+
+These indicators point to generally to lower quality housing, in industrial areas and the very highest crime rates, as well as high pupil-teacher ratios and other indicators which seem to demonstrate that disadvantaged socio-economic groups live in these two particular suburbs.  
+
+#####(h) In this data set, how many of the suburbs average more than seven rooms per  dwelling? How many average more than eight rooms per dwelling? 
 
 ```{r rooms per dwelling > 7}
 table(sort(Boston$rm))
@@ -313,33 +332,31 @@ cor(newdata$rm,newdata$medv)
 
 ```
 
-Commentary on the suburbs that average more than eight rooms per dwelling:
-Strong positive correlation between the number of rooms and:
-- the crime rate,the nitrogen oxide content, the index of access to radial highways, the tax rate
-Strong negative correlation between the number of rooms and the black indicator - i.e. you are much more likely to be non-black by ethnic origin if you live in a house with more than 8 rooms per dwelling.
+Commentary on the suburbs that average more than eight rooms per dwelling:  
+There is a strong positive correlation between the number of rooms and:  
+the crime rate,the nitrogen oxide content, the index of access to radial highways, the tax rate.  
+There is a strong negative correlation between the number of rooms and the black indicator - i.e. you are much more likely to be non-black by ethnic origin if you live in a house with more than 8 rooms per dwelling.
 
 ```{r remove}
 rm(list=ls()) # removes all data
 ```
 
-# Q3 regression analysis
+## Q3 regression analysis
 
-(a) Using the rnorm() function, create a vector, x, containing 100 observations  drawn from a N (0, 1) distribution, i.e., a normal distribution with mean 0 and variance 1 (sd = sqrt var = 1). This represents a feature, X.
+#####(a) Using the rnorm() function, create a vector, x, containing 100 observations  drawn from a N (0, 1) distribution, i.e., a normal distribution with mean 0 and variance 1 (sd = sqrt var = 1). This represents a feature, X.
 
 ```{r create vector x}
 set.seed(1)
 x=rnorm(100,mean=0,sd=1)
 ```
 
-(b) Using the rnorm() function, create a vector, eps, containing 100 observations drawn from a N (0, 0. 25) distribution i.e. a normal distribution with mean 0 and variance 0.25. 
+#####(b) Using the rnorm() function, create a vector, eps, containing 100 observations drawn from a N (0, 0. 25) distribution i.e. a normal distribution with mean 0 and variance 0.25. 
 
 ```{r create vector eps}
 eps=rnorm(100,mean=0,sd=sqrt(0.25))
 ```
 
-(c) Using X and EPS generate vector Y according to the model Y = -1 + 0.5*X + eps
-What is the length of vector Y?
-What are the values of beta0 and beta1 in this linear model?
+#####(c) Using X and EPS generate vector Y according to the model Y = -1 + 0.5*X + eps. What is the length of vector Y? What are the values of beta0 and beta1 in this linear model?
 
 ```{r create vector Y}
 y<-(-1)+0.5*x+eps
@@ -349,60 +366,66 @@ The vector y contains 100 observations
 Beta0 is -1, the intercept of the line with the x-axis when there is no error
 Beta1 is 0.5, the slope of the line
 
-(d) Create a scatterplot displaying the relationship between X and Y. Comment on what you observe. 
+#####(d) Create a scatterplot displaying the relationship between X and Y. Comment on what you observe. 
 ```{r 3d scatterplot}
 plot(x,y,xlim=c(-3,3),ylim=c(-3,1))
 ```
 
-Comments: The plot of x against y would be a straight line, where it not for the eps randomly generated error
+Comment: The plot of x against y would be a straight line, where it not for the eps randomly generated error.
 
-(e) Fit a least squares linear model to predict y using x. Comment on the model obtained. 
-How do Beta0-hat and Beta1-hat compare to Beta0 and Beta1?
+#####(e) Fit a least squares linear model to predict y using x. Comment on the model obtained. How do Beta0-hat and Beta1-hat compare to Beta0 and Beta1?
 
 ```{r leastsquares}
 
-plot(x,y,xlim=c(-3,3),ylim=c(-3,1))
+plot(x,y,xlim=c(-3,3),ylim=c(-3,1),col="green")
 Myregression = data.frame(x,y) # put vectors x and y into a data frame
 lm.fit.Myregression=lm(y~x, data=Myregression) # call the variable lm.fit.Myregression
 
 abline(lm.fit.Myregression, col="red") # fit the regression line
-summary(lm.fit.Myregression) # calculate the coefficients
+summary(lm.fit.Myregression) # give a summary of the coefficients and standard error
+coefficients(lm.fit.Myregression) # gives the coefficients
 beta0hat=lm.fit.Myregression$coefficients[1]
-beta0hat
+beta0hat #the value of beta0hat
 beta1hat=lm.fit.Myregression$coefficients[2]
-beta1hat
+beta1hat #the value of beta1hat
 ```
 
-Commentary: the least squares linear line is shown in red on the graph.
-Beta0hat is the intercept of the least squares regression line (shown in red) = -1.018846
-Beta1hat is the slope of the least squares regression line (shown in red) = -0.4994698
-They are very close to the true values of Beta0 and Beta1 defined by the model, but slightly different due to the error introduced by the vector eps
+Commentary: the least squares linear line is shown in red on the graph.  
 
-(f) Display the least squares line on the scatterplot obtained in (d). Draw the  population regression line on the plot, in a different color. Use the legend() command to create an appropriate legend. 
+Beta0hat is the intercept of the least squares regression line (shown in red) = -1.018846  
+Beta1hat is the slope of the least squares regression line (shown in red) = 0.4994698  
 
-We can use the standard error in the intercept and slope to calculate the population mean, using the summary function above.
+The values beta0hat and beta1hat are very close to the true values of Beta0 and Beta1 defined by the model, but slightly different due to the error introduced by the vector eps, which appropximates the irreducible error contained in the sample. The regression is an approximation which incorporates the irreducible error.
+
+#####(f) Display the least squares line on the scatterplot obtained in (d). Draw the  population regression line on the plot, in a different color. Use the legend() command to create an appropriate legend. 
+
+The least squares line is shown in red on the scatterplot.  
+We can use the standard error in the intercept and slope to calculate the population mean, using the summary function.  
+Beta0population is beta0 plus the standard error in the sample, beta0hat.
+Beta1population is beta1 plus the standard error in the sample, beta1hat.
 
 ```{r population}
+summary(lm.fit.Myregression)
 beta0popln=-1+0.04849 # Population mean coefficient beta0popln is the coefficient plus the standard error, given by the summary function above
-beta0popln
+beta0popln # beta0 (intercept) for the population, rather than the sample
 beta1popln=0.5+0.05386 # Population mean coefficient beta1popln is the coefficent plus the standard error
-beta1popln
+beta1popln  #beta1 (slope of line) for the population, rather than the sample
 ```
 
+Rmarkdown gives an error unless the plot is re-drawn, so I'm having to include the plot and regression calculation in the code fragment below. This is not necessary in the R file alone.
+
 ```{r coefficients}
-?coefficients 
-coef(lm.fit.Myregression)
-plot(x,y,xlim=c(-3,3),ylim=c(-3,1))
+
+plot(x,y,xlim=c(-3,3),ylim=c(-3,1),col="green")
 Myregression = data.frame(x,y) # put vectors x and y into a data frame
 lm.fit.Myregression=lm(y~x, data=Myregression) # call the variable lm.fit.Myregression
 abline(lm.fit.Myregression, col="red") # fit the regression line
-abline(beta0popln,beta1popln,untf=FALSE,col="green") # fits the population mean on the graph (does this include the error?)
-legend("topleft", inset=.05, c("regression line","population mean"),horiz=TRUE)
+abline(beta0popln,beta1popln,untf=FALSE,col="blue") # fits the population mean on the graph
+legend("topleft", inset=.05, c("regression line","population mean"),lty=c(1,1),lwd=c(1,1),col=c("red","blue"),bty="n",xjust=0,ncol=1)
+
 ```
 
-Beta0hat is -1.01885 and Beta1hat is 0.49947
-These values are very close to the actual values of Beta0 and Beta1, but very slightly different because of the irreducible error contained in the population mean that is included in the regression line
-The regression is an approximation which excludes the irreducible error.
+
 
 
 
