@@ -56,11 +56,36 @@ lines(xrange,inv.logit(logistic_fit$coefficients[1]+logistic_fit$coefficients[2]
 # Method 3. Make the prediction using the logistic regression and plot this as a smooth line. 
 # This is the preferred method.
 
+y<-Default$default
 x<-Default$balance
-yrange<-predict(logistic_fit,data.frame(x==xrange),type="response")
+logistic_fit_2=glm(y~x,family=binomial) 
+
+# I don't understand why we don't need to include the data=Default part here
+# Also how is this any different to logistic_fit?
+# Why use = instead of the assign statement <-?
+# Also why are we not using default_number but Default$default, yet default_number is showing on the chart?
+# Why are xrange and yrange only 100 elements long?
+
+# Make predictions about the data and then fit the curve
+# This doesn't make sense ... what are 'default' and 'balance' alone?
+# If we use Default$default and Default$balance we get 10,000 results instead of 2 for newdata
+
+yrange<-predict(logistic_fit_2,data.frame(x=xrange),type="response")
 lines(xrange,yrange,col="green")
+?predict
 
+logistic_fit_3<-glm(default~balance, data=Default,family=binomial)
+?glm
+newdata=predict(logistic_fit_3,data.frame(balance=c(1000,2000)),type="response")
+newdata
 
+# Build a logistic regression model between two qualitative variables
+logistic.fit_student<-glm(default~student,data=Default,family=binomial)
+summary(logistic.fit_student)
+
+#Now we can predict the probability of default given whether a student or non-student
+
+#There are two ways of doing this. Method 1:
 
 
 
