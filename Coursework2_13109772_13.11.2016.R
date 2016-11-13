@@ -117,6 +117,8 @@ summary(glm.fit)
 
 
 
+
+
 ## Q4 LOOCV and Loop 
 ## We saw that the cv.glm() function can be used in order to compute the LOOCV test error estimate
 ## Alternatively one could compute those quantities using the glm() and the predict.glm() functions, and a for loop
