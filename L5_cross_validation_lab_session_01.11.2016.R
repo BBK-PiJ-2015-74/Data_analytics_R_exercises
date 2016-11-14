@@ -28,7 +28,7 @@ glm.predict=rep("No",10000)
 glm.predict[glm.probs>0.5]="Yes"
 table(glm.predict,Default$default)
 
-# the predicted values are on the column of the table i.e. predict/actual
+# the predicted values are on the column of the table i.e. predict/actual - this is th confusion matrix
 
 table(Default$default,glm.predict)
 
