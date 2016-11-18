@@ -235,5 +235,101 @@ summary(glm.fit.newdata.train)
 
 ## (a) Fit a logistic regression model that predicts Direction using Lag1 and Lag2
 
+library('ISLR')
+View(Weekly)
+fix(Weekly)
+?Weekly
+dim(Weekly)
 glm.fit=glm(Direction~Lag1+Lag2,data=Weekly,family=binomial)
 summary(glm.fit)
+
+# (b) Fit a logistic regression model that predicts Direction using Lag1 and Lag2 using all but the first observation
+# Somehow we need to take one row of observations out of the dataset and fit it into a new dataframe
+
+minusone=Weekly[2:1089,] ## removes the first row of Weekly
+mone<-Weekly[-1,] ## removes the first row of Weekly
+mtwo<-Weekly[-2,] ## removes the second row of Weekly
+
+glm.fit.1=glm(Direction~Lag1+Lag2,data=mone,family=binomial)
+glm.fit.1
+
+# (c) Use the model to predict the direction of the first observation. Assume 'Up' if P>0.5
+# Was this observation correctly classified?
+
+glm.probs.1=predict(glm.fit.1,Weekly,type="response")[1] # applying the prediction to index 1
+
+glm.predict.1=ifelse(glm.probs.1>0.5,"Up","Down")
+
+glm.predict.1
+Weekly$Direction[1]
+
+# The observation is misclassified
+
+## Write a for loop from i=1 to n, where n is the number of observations in the data set, that performs
+# the above steps for every observation.
+
+n<-nrow(Weekly)
+mWeekly<-Weekly # Have to initialise the object outside the loop
+errors<-rep(0,n)
+for(i in 1:n) {
+  mWeekly<-Weekly[-i,] ## removes the ith row of Weekly
+  glm.fit<-glm(Direction~Lag1+Lag2,data=mWeekly,family=binomial)
+  glm.probs=predict(glm.fit,Weekly,type="response")[i] # applying the prediction to index i of Weekly
+  glm.predict=ifelse(glm.probs>0.5,"Up","Down")
+  errors[i]<-ifelse((glm.predict==Weekly$Direction[i]),0,1)
+}
+
+LOOCV=mean(errors) # Therefore this model gets the predictions wrong 44.995% of the time
+# Predictions are correct 55% of the time and incorrect 45% of the time.
+# Comment on the results: this is very similar to the result obtained by using the confusion matrix in Q1.
+
+## Q5 Optional LOOCV based on a simulated dataset
+
+# Generate a simulated dataset as follows:
+
+set.seed(1)
+X=rnorm(100)
+Y=2*X^2-X+rnorm(100)
+
+# In this dataset, what is n and what is p?
+# n is the number of observations in the dataset = 100
+# p is the population??
+# Equation: y = beta2(x^2)+beta1(x)+beta0
+# Coefficients beta2 = 2, beta1 = 1, beta0 = rnorm(100)
+
+# Create a scatterplot of X against Y. Comment on what you find
+
+plot(X,Y)
+
+# Comment: y=f(x) is a polynomial of order 2 with a minimum of y ~ 0 when x ~ 0.5
+
+# (c) Set a random seed and then compute the LOOCV using least squares for the formulas given.
+
+# (i) Linear model Y = beta0 + beta1X + e
+
+simulatedData=data.frame(X,Y)
+glm.fit=glm(Y~X,data=simulatedData) # leave out family = binomial because we are fitting a linear regression not a logistic regression
+summary(glm.fit)
+abline(glm.fit)
+
+# Need to use the cv.glm() function
+
+library(boot)
+set.seed(1)
+cv.err=cv.glm(simulatedData,glm.fit) #leave out K=10 if K=n
+cv.err$delta # a vector of length 2, which is the raw LOOCV estimate of prediction error, and the value adjusted for bias
+
+errors<-rep(0,4)
+set.seed(20)
+for(i in 1:4) {
+  glm.fit<-glm(Y~poly(X,i),data=simulatedData)
+  summary(glm.fit)
+  cv.err=cv.glm(simulatedData,glm.fit)
+  errors[i]=cv.err$delta[1]
+}
+errors
+
+## The least squares error is the same for every random seed.
+# Why? Not sure!!
+
+
