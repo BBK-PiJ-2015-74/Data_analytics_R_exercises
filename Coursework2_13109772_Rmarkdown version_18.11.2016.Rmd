@@ -16,7 +16,7 @@ This question is answered using the Weekly dataset, which is part of the ISLR pa
 
 ```{r question1setup}
 library(ISLR)
-View(Weekly)
+#View(Weekly)
 fix(Weekly)
 ?Weekly
 names(Weekly) # Show the names of the variables
@@ -28,7 +28,7 @@ dim(Weekly) # shows the dimensions of the dataset
 ``` {r question1a}
 summary(Weekly) # produces a numerical summary of the Weekly data
 pairs(Weekly) # produces a graphical summary of the Weekly data
-cor(Weekly) # This doesn't work beause the Direction variable is qualitative
+#cor(Weekly) # This doesn't work beause the Direction variable is qualitative
 cor(Weekly[,-9]) # This produces a correlation matrix without the Direction variable
 ```
 
@@ -91,7 +91,7 @@ In this case the logistic regression correctly predicted the market movement 56%
 In this problem I develop a model to predict whether a given car gets a high or a low gas mileage based on the Auto dataset.
 
 ```{r q2_setup}
-View(Auto)
+#View(Auto)
 fix(Auto)
 ?Auto
 names(Auto) # Show the names of the variables
@@ -140,7 +140,7 @@ We have previously used logistic regression to calculate the probability of defa
 ```{r q3_a_fit_logistic_model}
 
 library(ISLR)
-View(Default)
+#View(Default)
 fix(Default)
 ?Default
 names(Default) # Show the names of the variables: default, student, balance, income
@@ -230,12 +230,10 @@ Commentary on the results obtained: they are very similar for each seed, indicat
 
 ##### (d) Logistic regression model that predicts the probability of default using income, balance and a dummy variable for student. Estimate the test error using the validation set approach.
 
-```{r q3_d_logistic_regression}
-
-View(Default)
+```{rq3_d_logisticreg}
 student_number<- as.numeric(Default$student)-1
 Newdata=data.frame(Default,student_number)
-View(Newdata)
+#View(Newdata)
 
 set.seed(1)
 glm.fit.newdata=glm(default~income+balance+student_number,data=Newdata,family=binomial)
@@ -265,7 +263,7 @@ We saw that the cv.glm() function can be used in order to compute the LOOCV test
 ```{r_q4_a_regression}
 
 library('ISLR')
-View(Weekly)
+#View(Weekly)
 fix(Weekly)
 ?Weekly
 dim(Weekly)
@@ -362,6 +360,7 @@ i.e. a quadratic function.
 simulatedData=data.frame(X,Y)
 glm.fit=glm(Y~X,data=simulatedData) # leave out family = binomial because we are fitting a linear regression not a logistic regression
 summary(glm.fit)
+plot(X,Y)
 abline(glm.fit)
 
 # Need to use the cv.glm() function
