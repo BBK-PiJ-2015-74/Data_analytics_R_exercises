@@ -16,7 +16,6 @@ This question is answered using the Weekly dataset, which is part of the ISLR pa
 
 ```{r question1setup}
 library(ISLR)
-#View(Weekly)
 fix(Weekly)
 ?Weekly
 names(Weekly) # Show the names of the variables
@@ -74,13 +73,12 @@ The confusion matrix is shown as follows:
 ```{r question1c_confusion}
 
 table(glm.predict,Weekly$Direction)
-mean(glm.predict==Weekly$Direction)
 ```
 
 The overall fraction of correct predictions is:
 ```{r question1c_correct_predictions}
 
-correctpredict=mean(glm.predict==Weekly$Direction)/nrow(Weekly$Direction)
+correctpredict=mean(glm.predict==Weekly$Direction)
 correctpredict
 ```
 
@@ -111,14 +109,14 @@ Auto2=data.frame(mpg01,Auto)
 ```{r q2_b_association}
 
 pairs(Auto2)
-plot(Auto2$mpg01,Auto$mpg)
-plot(Auto2$mpg01,Auto$cylinders)
-plot(Auto2$mpg01,Auto$displacement)
-plot(Auto2$mpg01,Auto$horsepower)
-plot(Auto2$mpg01,Auto$weight)
-plot(Auto2$mpg01,Auto$acceleration)
-plot(Auto2$mpg01,Auto$year)
-plot(Auto2$mpg01,Auto$origin)
+plot(Auto2$mpg01,Auto$mpg,xlab="binary variable mpg01",ylab="mpg",main="Plot of binary variable mpg01 vs mpg for cars in the Auto dataset")
+plot(Auto2$mpg01,Auto$cylinders,xlab="mpg01",ylab="cylinders")
+plot(Auto2$mpg01,Auto$displacement,xlab="mpg01",ylab="displacement")
+plot(Auto2$mpg01,Auto$horsepower,xlab="mpg01",ylab="horsepower")
+plot(Auto2$mpg01,Auto$weight,xlab="mpg01",ylab="weight")
+plot(Auto2$mpg01,Auto$acceleration,xlab="mpg01",ylab="acceleration")
+plot(Auto2$mpg01,Auto$year,xlab="mpg01",ylab="year")
+plot(Auto2$mpg01,Auto$origin,xlab="mpg01",ylab="origin")
 
 glm.fit=glm(mpg01~cylinders+displacement+horsepower+weight+acceleration+year+origin,data=Auto2,family=binomial)
 
@@ -140,7 +138,6 @@ We have previously used logistic regression to calculate the probability of defa
 ```{r q3_a_fit_logistic_model}
 
 library(ISLR)
-#View(Default)
 fix(Default)
 ?Default
 names(Default) # Show the names of the variables: default, student, balance, income
@@ -167,13 +164,12 @@ length(glm.probs.validate)
 
 glm.predict.validate=rep("No",5000)
 glm.predict.validate[glm.probs.validate>0.5]="Yes"
-glm.predict.validate
 
 table(Default$default[-train],glm.predict.validate)
 
-Default$default # the full dataset
-Default$default[train] # the dataset based only on the training observations
-Default$default[-train] # the dataset based only on the validation observations
+##Default$default # the full dataset
+##Default$default[train] # the dataset based only on the training observations
+##Default$default[-train] # the dataset based only on the validation observations
 
 # Compute the validation set error, which is the fraction of observations in the validation set which are misclassified  
 
@@ -191,7 +187,7 @@ glm.probs.validate=predict(glm.fit.train,Default,type="response")[-train]
 length(glm.probs.validate)
 glm.predict.validate=rep("No",5000)
 glm.predict.validate[glm.probs.validate>0.5]="Yes"
-glm.predict.validate
+# glm.predict.validate - prints the dataset
 table(Default$default[-train],glm.predict.validate)
 mean(glm.predict.validate!=Default$default[-train]) # 2.48% of observations are misclassified
 mean(glm.predict.validate==Default$default[-train]) # 97.52% of observations are correctly classified
@@ -205,7 +201,7 @@ glm.probs.validate=predict(glm.fit.train,Default,type="response")[-train]
 length(glm.probs.validate)
 glm.predict.validate=rep("No",5000)
 glm.predict.validate[glm.probs.validate>0.5]="Yes"
-glm.predict.validate
+# glm.predict.validate - prints the dataset
 table(Default$default[-train],glm.predict.validate)
 mean(glm.predict.validate!=Default$default[-train]) # 2.7% of observations are misclassified
 mean(glm.predict.validate==Default$default[-train]) # 97.3% of observations are correctly classified
@@ -220,7 +216,7 @@ glm.probs.validate=predict(glm.fit.train,Default,type="response")[-train]
 length(glm.probs.validate)
 glm.predict.validate=rep("No",5000)
 glm.predict.validate[glm.probs.validate>0.5]="Yes"
-glm.predict.validate
+# glm.predict.validate
 table(Default$default[-train],glm.predict.validate)
 mean(glm.predict.validate!=Default$default[-train]) # 2.6% of observations are misclassified
 mean(glm.predict.validate==Default$default[-train]) # 97.4% of observations are correctly classified
@@ -231,6 +227,9 @@ Commentary on the results obtained: they are very similar for each seed, indicat
 ##### (d) Logistic regression model that predicts the probability of default using income, balance and a dummy variable for student. Estimate the test error using the validation set approach.
 
 ```{rq3_d_logisticreg}
+library(ISLR)
+fix(Default)
+?Default
 student_number<- as.numeric(Default$student)-1
 Newdata=data.frame(Default,student_number)
 #View(Newdata)
@@ -245,12 +244,17 @@ glm.probs.newdata.validate=predict(glm.fit.newdata.train,Newdata,type="response"
 length(glm.probs.newdata.validate)
 glm.predict.newdata.validate=rep("No",5000)
 glm.predict.newdata.validate[glm.probs.newdata.validate>0.5]="Yes"
-glm.predict.newdata.validate
+
 table(Newdata[-train],glm.predict.newdata.validate)
-mean(glm.predict.newdata.validate!=Newdata[-train]) # 65.1% of observations are misclassified
-mean(glm.predict.newdata.validate==Newdata[-train]) # 34.9% observations are correctly classified
+misclassify=mean(glm.predict.newdata.validate!=Newdata[-train]) # 65.1% of observations are misclassified
+misclassify
+correctclassify=mean(glm.predict.newdata.validate==Newdata[-train]) # 34.9% observations are correctly classified
+correctclassify
 summary(glm.fit.newdata.train)
 ```
+
+65.1% of observations are misclassified.  
+34.9% of observations are correctly classified
 
 Commentary: Including the variable 'student' seems to increase test error rate and have a huge downward impact on the validity of the model. Probably because variable student has a relatively high p-value, therefore seems to add noise to the regression, as including it over-fits the model.
 
@@ -317,9 +321,11 @@ for(i in 1:n) {
 ```{r q4_e_LOOCV}
 
 LOOCV=mean(errors)
+cat("The % of the time that this model correctly predicts the outcome is",LOOCV)
+cat("The % of the time that this model incorrectly predicts the outcome is",(1-LOOCV))
 ```
 
-Therefore this model gets the predictions wrong 44.995% of the time.  
+Therefore this model gets the predictions wrong 45% of the time.  
 Predictions are correct 55% of the time and incorrect 45% of the time.  
 Comment on the results: this is very similar to the result obtained by using the confusion matrix in Q1. Basically it states that our linear model is only slightly better than a guess (which should result in a 50% probability of getting the prediction correct).
 
@@ -344,7 +350,7 @@ Coefficients beta2 = 2, beta1 = 1, beta0 = rnorm(100)
 
 ```{r_q5_b_plot}
 
-plot(X,Y)
+plot(X,Y,xlab="Vector X",ylab="Vector Y")
 
 ```
 
@@ -385,6 +391,7 @@ errors
 
 ```{r q5_d_repeat}
 
+library(boot)
 errors<-rep(0,4)
 set.seed(22)
 for(i in 1:4) {
