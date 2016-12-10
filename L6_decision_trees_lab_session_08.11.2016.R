@@ -12,7 +12,8 @@ tree.hitters<-tree(log(Salary)~Years+Hits,Hitters)
 tree.hitters
 summary(tree.hitters)
 plot(tree.hitters)
-text(tree.hitters,pretty=0) 
+text(tree.hitters,pretty=1)
+
 #pretty = 0 includes the category names for any qualitative predictors, 
 # rather than simply displaying a letter for each category
 

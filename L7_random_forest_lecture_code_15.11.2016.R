@@ -55,9 +55,6 @@ plot(test.mse,xlab ="Number of bootstrap data sets",ylab="Test mean sum of squar
 abline(h=test.mse[1],lty=2,col="red")
 
 
-
-
-
 # Bagging for classification trees:
 # Construct B classification trees using B boostrapped training datasets
 # Example for Car Seat data
