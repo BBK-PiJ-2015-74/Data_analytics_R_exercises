@@ -26,7 +26,7 @@ boston.test= Boston[-train,"medv"]
 Figure 8.10 shows three values of mtry: m=p, m=p/2 and m=root(p)  
 p is the number of predictors in the datasets  
 mtry is the number of predictors sampled for splitting at each node of the tree. 
-The default for a random forest is m=p/3 for a regression tree and m=root(p) for classification
+The default for a random forest is m=p/3 for a regression tree and m=root(p) for classification.  
 In this case, we're using bagging - bagging is just a special case of random forests.
 
 ##### Plot with mtry where m=p, p=13
@@ -39,11 +39,9 @@ for (i in 1:200) {
   yhat.bag=predict(bag.boston,newdata=Boston[-train,])
   test.mse[i]=mean((yhat.bag-boston.test)^2)
 }
-# ```
 
-# ###### mtry where m=p/2 = 6.5 ~ 6 or 7 (m needs to be an integer)
+# mtry where m=p/2 = 6.5 ~ 6 or 7 (m needs to be an integer)
 
-# ```{rquestion1_loop2}
 test2.mse=rep(0,200)
 for (i in 1:200) {
   set.seed(1)
@@ -51,9 +49,7 @@ for (i in 1:200) {
   yhat.bag=predict(bag.boston,newdata=Boston[-train,])
   test2.mse[i]=mean((yhat.bag-boston.test)^2)
 }
-# ```
 
-# ```{rquestion1_loop3}
 test3.mse=rep(0,200)
 for (i in 1:200) {
   set.seed(1)
@@ -61,11 +57,9 @@ for (i in 1:200) {
   yhat.bag=predict(bag.boston,newdata=Boston[-train,])
   test3.mse[i]=mean((yhat.bag-boston.test)^2)
 }
-# ```
 
-# ##### Plot with mtry where m=root(p)=sqrt(13). NB sqrt(13)=3.6 so use integer m=4
+# Plot with mtry where m=root(p)=sqrt(13). NB sqrt(13)=3.6 so use integer m=4
 
-#```{rquestion1_loop4}
 test4.mse=rep(0,200)
 for (i in 1:200) {
   set.seed(1)
@@ -73,10 +67,8 @@ for (i in 1:200) {
   yhat.bag=predict(bag.boston,newdata=Boston[-train,])
   test4.mse[i]=mean((yhat.bag-boston.test)^2)
 }
-#```
 
-# ```{r question1_plot, echo=TRUE}
-plot(test.mse,xlab ="Number of trees",ylab="Test classification error",type="l",col="orange",xlim=c(0, 200), ylim=c(0, 26))
+plot(test.mse,xlab ="Number of trees",ylab="Test classification error",main="Plot of number of trees against test classification error for different values of mtry(number of predictors used at each split",type="l",col="orange",xlim=c(10, 200), ylim=c(10, 26))
 lines(test2.mse,col="blue")
 lines(test3.mse,col="red")
 lines(test4.mse,col="green")
@@ -106,6 +98,7 @@ train=sample(1:nrow(Carseats),nrow(Carseats)/2)
 tree.carseats=tree(Sales~CompPrice+Income+Advertising+Population+Price+ShelveLoc+Age+Education+Urban+US,Carseats,subset=train)
 plot(tree.carseats)
 text(tree.carseats,pretty=0)
+title("Regression tree for Sales as response, Carseats dataset")
 summary(tree.carseats)
 ```
 
@@ -119,8 +112,8 @@ The following code plots the tree:
 ```{r question2_b_tree}
 yhat=predict(tree.carseats,newdata=Carseats[-train,])
 carseats.test=(Carseats[-train,"Sales"])
-plot(yhat,carseats.test)
-abline(0,1)
+plot(yhat,carseats.test,xlab="yhat - prediction of Sales",ylab="Carseats test data",main="Plot of prediction against test for Sales in the Carseats dataset")
+abline(0,1) # accurate predictions should lie on the line
 mean((yhat-carseats.test)^2)
 ```
 
@@ -130,21 +123,22 @@ The test MSE for this dataset is 4.14, as shown above.
 
 ```{r question2_c}
 cv.carseats=cv.tree(tree.carseats, K=10) # K-fold cross validation
-plot(cv.carseats$size,cv.carseats$dev,type='b')
+plot(cv.carseats$size,cv.carseats$dev,type='b',xlab="Number of tree nodes",ylab="Mean squared error",main="Plot of number of nodes against test MSE for Sales in the carseats dataset")
 ```
 
 ```{r question2_c_prunedtree}
 prune.carseats=prune.tree(tree.carseats,best=7)
 plot(prune.carseats)
 text(prune.carseats,pretty=0)
+title("Pruned regression tree for Sales in the carseats dataset, 7 nodes")
 summary(prune.carseats)
 ```
 
 ```{r question2_c_testMSE}
 yhat=predict(prune.carseats,newdata=Carseats[-train,])
 carseats.prune.test=(Carseats[-train,"Sales"])
-plot(yhat,carseats.prune.test)
-abline(0,1)
+plot(yhat,carseats.prune.test,xlab="yhat - prediction of Sales",ylab="Carseats test data",main="Prediction of Sales using pruned regression tree")
+abline(0,1) # correct classifications should lie on the line
 mean((yhat-carseats.prune.test)^2)
 ```
 
@@ -168,7 +162,7 @@ bag.carseats
 ```{r question2_d_predict}
 yhat.bag=predict(bag.carseats,newdata=Carseats[-train,])
 carseats.test = Carseats[-train ,"Sales"]
-plot(yhat.bag,carseats.test)
+plot(yhat.bag,carseats.test,xlab="yhat.bag - prediction of Sales",ylab="Sales test data",main="Prediction of Sales using bagging, ntree = 500")
 abline(0,1)
 mean((yhat.bag-carseats.test)^2)
 ```
@@ -191,7 +185,7 @@ Shelve location and price determine most of the variability in the data.
 ```{r question2_d_predict2}
 yhat.bag=predict(bag.carseats,newdata=Carseats[-train,])
 carseats.test = Carseats[-train ,"Sales"]
-plot(yhat.bag,carseats.test)
+plot(yhat.bag,carseats.test, xlab="yhat.bag - prediction of Sales",ylab="Sales test data",main="Prediction of Sales using bagging, ntree = 30")
 abline(0,1)
 mean((yhat.bag-carseats.test)^2)
 ```
@@ -210,7 +204,7 @@ rf.carseats=randomForest(Sales~.,data=Carseats,subset=train,mtry=4,importance=TR
 yhat.rf=predict(rf.carseats,newdata=Carseats[-train,])
 carseats.test=Carseats[-train, "Sales"]
 
-plot(yhat.rf,carseats.test,xlim=c(0,15),ylim=c(0,15))
+plot(yhat.rf,carseats.test,xlim=c(0,15),ylim=c(0,15),xlab="Prediction",ylab="Sales test data",main="Prediction of Sales using random forests")
 abline(0,1)
 mean((yhat.rf-carseats.test)^2)
 ```
@@ -256,7 +250,7 @@ OJ.test.purchase=OJ[-train,"Purchase"]
 
 ##### (b) Fit a tree to the training data, with Purchase as the response and the other variables as predictors 
 
-(NB. Buy does not exist so ignoring this?). 
+(NB. Buy does not exist so ignoring this variable?). 
 
 ##### Use the summary() function to produce summary statistics about the tree, and describe the results obtained. ##### What is the training error rate? How many terminal nodes does the tree have?
 
@@ -288,6 +282,7 @@ The residual deviance in the terminal node is 10.030
 
 ```{r question3_d}
 plot(tree.oj.train)
+title("Classification tree for Purchase as the response, OJ dataset")
 text(tree.oj.train,pretty=0)
 ```
 
@@ -336,6 +331,7 @@ plot(cv.oj$size,cv.oj$dev,type='b',xlab="Number of splits/terminal nodes",ylab="
 prune.oj=prune.tree(tree.oj.train,best=5)
 plot(prune.oj)
 text(prune.oj,pretty=0)
+title("Pruned classification tree for the OJ dataset")
 ```
 
 ##### (j) Compare the training error rates between the pruned and unpruned trees. Which is higher?

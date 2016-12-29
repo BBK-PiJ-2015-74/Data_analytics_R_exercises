@@ -81,6 +81,7 @@ View(Carseats)
 tree.carseats=tree(Sales~CompPrice+Income+Advertising+Population+Price+ShelveLoc+Age+Education+Urban+US,Carseats,subset=train)
 plot(tree.carseats)
 text(tree.carseats,pretty=0)
+title("Here is the title")
 summary(tree.carseats)
 
 # Interpret the results: 
