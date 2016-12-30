@@ -2,7 +2,9 @@
 # Lucie Burgess 13109772
 # Support Vector Machines, SVM and Logistic Regression, Hierarchical Clustering, PCA and K-means clustering
 
-# Q1. This problem uses the OJ dataset which is part of the ISLR package.
+# Q1. Support Vector Machines. 
+
+# This problem uses the OJ dataset which is part of the ISLR package.
 
 # (a) Create a training set which contains a random sample of 800 observations, and a test set containing the remaining observations.
 
