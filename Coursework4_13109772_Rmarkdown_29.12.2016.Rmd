@@ -1,5 +1,5 @@
 ---
-title: "Coursework 4: Support Vector Machines, Logistic Regression revisited, Clustering and Principal Components Analyis""
+title: "Coursework 4: Support Vector Machines, Logistic Regression revisited, Clustering and Principal Components Analyis"
 author: "Lucie Burgess, 13109772"
 date: "Saturday 12th December 2016"
 output: html_document
@@ -41,7 +41,7 @@ Gamma is a parameter for all kernels except linear. The default is 1/(data dimen
 623 support vectors have been fitted to the data, 311 in one class (CH) and 312 in the other (MM).
 There are two classes of observation i.e. two types of choice of orange juice - CH and MM.
 
-###### (c) Calculate the training error rate and the test error rate
+##### (c) Calculate the training error rate and the test error rate
 
 ```{r question1c_train}
 
@@ -61,8 +61,9 @@ table(svm.predict.test,OJ.test$Purchase)
 testErrorRate=(13+45)/270
 testErrorRate 
 ```
-21.5% OJ purchase observations incorrectly classified using SVM approach with this cost level.
-
+21.5% OJ purchase observations incorrectly classified using SVM approach with this cost level.  
+  
+  
 ##### (d) Use the tune() function to select an optimal cost. Consider values in the range 0.01 to 10.
 
 The e1071 library includes a built-in function, tune(), to perform cross-validation.  
@@ -237,16 +238,15 @@ x2=runif(500)-0.5
 y=1*(x1^2-x2^2>0)
 ```
 Leaving off the 1* off the final function gives a vector containing values of FALSE/TRUE.
-y just gives the class of the data: When x1^2-x2^2 > 0, y=1, otherwise y=0.
+y just gives the class of the data: When (x1)^2-(x2)^2 > 0, y=1, otherwise y=0.
 
-#####(b) Plot the observations, coloured according to their class labels. Your plot should display
-# x1 on the x-axis and x2 on the y-axis.
+##### (b) Plot the observations, coloured according to their class labels. Your plot should display x1 on the x-axis and x2 on the y-axis.
 
 ```{r question_2b}
 
 x=data.frame(x1,x2)
 palette()
-plot(x1,x2,col=ifelse(y==0,"blue","green"),pch=ifelse(y==0,"o","x"),xlab="X1",ylab="X2")
+plot(x1,x2,col=ifelse(y==0,"blue","green"),pch=ifelse(y==0,"o","x"),xlab="X1",ylab="X2",main="Plot of training data")
 ```
 
 plot(x,col=(4-y)) # The data is (x1,x2,y). When x1^2-x2^2 > 0, y=1, otherwise y=0.
@@ -268,24 +268,23 @@ summary(glm.fit)
 
 glm.probs=predict(glm.fit,data=data.train,type="response")
 
-# Choose y = 1 if glm.predict>0.47 - just above the mean and y = 0 if glm.predict < 0.47, as glm.predict will give a series of probabilities between 0 and 1.
-
 mean(glm.probs)
 glm.predict=rep("0",500)
 glm.predict[glm.probs>0.47]=1
 glm.predict[1:20]
 
-plot(x1,x2,col=ifelse(glm.predict==0,"blue","green"),pch=ifelse(glm.predict==0,"o","+"),xlab="X1",ylab="X2")
+plot(x1,x2,col=ifelse(glm.predict==0,"blue","green"),pch=ifelse(glm.predict==0,"o","+"),xlab="X1",ylab="X2",main="Plot of response using linear logistic regression")
 
 table(glm.predict,y)
 trainErr=(88+136)/500
 trainErr
 ```
 
+I choose y = 1 if glm.predict>0.47 - just above the mean and y = 0 if glm.predict < 0.47, as glm.predict will give a series of probabilities between 0 and 1.  
 The chart shows very obviously a linear decision boundary.
 Training error is 44.8% for the linear logistic regression model.
 
-#####(e) Now fit a logistic regression model to the data using non-linear functions of X1 and X2 as predictors e.g. x1*x1, x1*x2, log(x2) or log(x1)
+#####(e) Now fit a logistic regression model to the data using non-linear functions of X1 and X2 as predictors e.g. (x1*x1), (x1*x2), log(x2) or log(x1)
 
 ```{r question_2e}
 glm.fit2=glm(y~ poly(x1, 2) + poly(x2, 2) + (x1 * x2), data=data.train, family="binomial") 
@@ -302,7 +301,7 @@ glm.predict2=rep("0",500)
 mean(glm.probs2)
 glm.predict2[glm.probs2>0.47]=1
 
-plot(x1,x2,col=ifelse(glm.predict2==0,"blue","green"),pch=ifelse(glm.predict2==0,"o","+"),xlab="X1",ylab="X2")
+plot(x1,x2,col=ifelse(glm.predict2==0,"blue","green"),pch=ifelse(glm.predict2==0,"o","+"),xlab="X1",ylab="X2",main="Plot of response using non-linear function with logistic regression")
 
 table(glm.predict2,y)
 trainErr2=(0)/500
@@ -323,7 +322,7 @@ glm.predict3=rep("0",500)
 mean(glm.probs3)
 glm.predict3[glm.probs3>0.51]=1
 
-plot(x1,x2,col=ifelse(glm.predict3==0,"blue","green"),pch=ifelse(glm.predict3==0,"o","+"),xlab="X1",ylab="X2")
+plot(x1,x2,col=ifelse(glm.predict3==0,"blue","green"),pch=ifelse(glm.predict3==0,"o","+"),xlab="X1",ylab="X2",main="Plot of response using log function with logistic regression")
 
 table(glm.predict3,y)
 trainErr3=(138+120)/500
@@ -348,7 +347,7 @@ mean(svm.probs)
 svm.predict[svm.probs>0.1]=1
 svm.predict[1:20]
 
-plot(x1,x2,col=ifelse(svm.predict==0,"blue","green"),pch=ifelse(svm.predict==0,"o","+"),xlab="X1",ylab="X2")
+plot(x1,x2,col=ifelse(svm.predict==0,"blue","green"),pch=ifelse(svm.predict==0,"o","+"),xlab="X1",ylab="X2",main="Plot of response using linear SVM")
 table(svm.predict,y)
 trainError=(64+127)/500
 trainError
@@ -370,7 +369,7 @@ mean(svm.probs)
 svm.predict[svm.probs>mean(svm.probs)]=1
 svm.predict[1:20]
 
-plot(x1,x2,col=ifelse(svm.predict==0,"blue","green"),pch=ifelse(svm.predict==0,"o","+"),xlab="X1",ylab="X2")
+plot(x1,x2,col=ifelse(svm.predict==0,"blue","green"),pch=ifelse(svm.predict==0,"o","+"),xlab="X1",ylab="X2",main="Plot of response using polynomial SVM")
 table(svm.predict,y)
 trainError=(6+16)/500
 trainError
@@ -379,6 +378,160 @@ Amazingly good result using the SVM approach with the decision boundary at the m
 Changing the value of the decision boundary makes a big difference to the results and the shape of the curve.
 
 Both SVM using a polynomial kernel and linear logistic regression using non-linear features give very similar, and very reliable results. The SVM model could be tuned further to an optimal level of cost.
+
+## Q3 Hierarchical Clustering
+
+Consider the USArrests data. We will now perform hierarchical clustering on the states.
+
+##### (a) Using hierarchical clustering with complete linkage and Euclidean distance, cluster the states.
+
+```{r question_3a_setup}
+
+#install.packages("ISLR")
+library(ISLR)
+?USArrests
+# View(USArrests)
+
+hc.complete=hclust(dist(USArrests),method="complete")
+plot (hc.complete,main="Cluster dendrogram - complete linkage",xlab="",sub="",cex=0.5)
+```
+
+###### (b) Cut the dendrogram at a height that results in three distinct clusters. Which states belong to which clusters?
+
+```{r question_3b} 
+clusterstates=cutree(hc.complete,3)
+sort(clusterstates)  
+```
+The table above shows which states belong to which clusters - 1, 2 or 3. For example, Alabama belongs to cluster 1 and North Dakota belongs to cluster 3.
+
+##### (c) Hierarchically cluster the states using complete linkage and Euclidean distance, after scaling the variables to have standard deviation one.
+
+Scale the variables to have standard deviation 1:
+
+```{r question_3c}
+
+USAScale=scale(USArrests, center = FALSE, scale = apply(USArrests, 2, sd, na.rm = TRUE))
+hc.complete.sd=hclust(dist(USAScale),method="complete")
+plot (hc.complete.sd,main="Cluster dendrogram scaled - complete linkage",xlab="",sub="",cex=0.5)
+```
+
+###### (d) What effect does scaling the variables have on the hierarchical clustering obtained? In your opinion, should the variables be scaled before the inter-observation dissimilarities are computed? Provide a justification for your answer.
+
+```{r question_3d}
+clusterstates.sd=cutree(hc.complete.sd,3)
+sort(clusterstates.sd)
+table(cutree(hc.complete, 3), cutree(hc.complete.sd, 3))
+```
+
+The table shows that the two dendroagrams are quite different - the non-scaled version puts 16 states in the first cluster, 14 in the second and 20 in the 3rd cluster.  
+The scaled version puts 8 in the first cluster, 11 in the 2nd and 31 in the 3rd.  
+In the non-scaled version 1st cluster (first row of table), there are 6 in the first cluster in the scaled version,
+9 in the 2nd cluster in the scaled version and 1 in the 3rd.  
+If the scaled and non-scaled versions gave the same results we would only have elements on the diagonals of the matrix.  
+The variables do need to be scaled because the different observations in the dataset have different units, so scaling to one SD makes sense to make equivalent comparisons.
+
+## Q4 - Principal Components Analysis and K-means Clustering
+
+In this problem, you will generate simulated data, and then perform PCA and K-means clustering on the data.
+
+##### (a) Generate a simulated data set with 20 observations in each of three classes (i.e. 60 observations total), and 50 variables.
+
+Hint: There are a number of functions in R that you can use to generate data. One example is the rnorm() function; runif() is another option. Be sure to add a mean shift to the observations in each class so that there are three distinct classes.
+
+```{r question_4a_setup}
+
+set.seed(2)
+x1 <- matrix(rnorm(20*50, mean=1.0, sd=0.01), ncol=50)
+set.seed(3)
+x2 <- matrix(rnorm(20*50, mean=0.5, sd=0.01), ncol=50)
+set.seed(4)
+x3 <- matrix(rnorm(20*50, mean=1.5, sd=0.2), ncol=50)
+
+x=matrix(0,nrow=60,ncol=50)
+x[1:20,]<-x1
+x[1:20,10]<-1.0
+x[21:40,]<-x2
+x[21:40,15]<-2.0
+x[41:60,]<-x3
+x[41:60,]<-2.5
+
+# I had to add an arbitrary shift to a random column of the data to get some separation between the three classes
+
+true.labels <- c(rep(1, 20), rep(2, 20), rep(3, 20))
+```
+
+##### (b) Perform PCA on the 60 observations and plot the first two principal components’ eigenvector.  
+
+Use a different color to indicate the observations in each of the three classes.  
+If the three classes appear separated in this plot, then continue on to part (c).  
+If not, then return to part (a) and modify the simulation so that there is greater separation between the three classes. Do not continue to part (c) until the three classes show at least some separation in the first two principal component eigenvectors.
+
+```{r question_4b}
+pr.out <- prcomp(x)
+plot(pr.out$x[, 1:2], col=1:3, xlab = "PC1", ylab = "PC2", pch = 19)
+```
+
+##### (c) Perform K-means clustering of the observations with K = 3. How well do the clusters that you obtained in K-means clustering compare to the true class labels?
+
+Hint: You can use the table() function in R to compare the true class labels to the class labels obtained by clustering.  
+Be careful how you interpret the results: K-means clustering will arbitrarily number the clusters, so you cannot simply check whether the true class labels and clustering labels are the same.
+
+```{r question_4c}
+km.out <- kmeans(x, 3, nstart = 20)
+table(true.labels, km.out$cluster)
+plot(x,col=(km.out$cluster+1),main="K-Means Clustering Results with K=3",xlab="",ylab="",pch=19,cex=0.5)
+```
+
+The table shows that the observations are perfectly clustered, as we would expect, since we set it up like that!
+i.e. there are 20 observations in class 1, 20 in class 2 and 20 in class 3  
+It doesn't matter that the figures are not on the diagonal, since km.out$cluster doesn't assign the same labels as the true labels so they are not comparable.
+
+#####(d) Perform K means clustering with K=2. Describe your results
+
+```{r question_4d}
+km.out <- kmeans(x, 2, nstart = 20)
+table(true.labels, km.out$cluster)
+plot(x,col=(km.out$cluster+1),main="K-Means Clustering Results with K=2",xlab="",ylab="",pch=19,cex=0.5)
+```
+
+Explanation: K-means assigns the 20 observations in class 3 to class 1; and assigns the remaining 40 observations to a 2nd class. Difficult to know why K-means clustering puts class 2 and 3 together in the class when K=2 - perhaps because the mean shift added was similar (2.0 to class 2 and 2.5 to class 3 respectively). 
+
+#####(e) Perform K means clustering with K=4. Describe your results
+
+```{r question_4e}
+km.out <- kmeans(x, 4, nstart = 20)
+table(true.labels, km.out$cluster)
+plot(x,col=(km.out$cluster+1),main="K-Means Clustering Results with K=2",xlab="",ylab="",pch=19,cex=0.5)
+```
+
+This time K-means splits the first class into two clusters - one with 8 observations and one with 12.  
+The second and third clusters are unchanged from k=3.
+
+#####(f) Now perform K-means clustering with K = 3 on the first two principal components, rather than on the raw data. 
+
+That is, perform K-means clustering on the 60 × 2 matrix of which the first column is the first principal component’s corresponding eigenvector, and the second column is the second principal component’s corresponding eigenvector. Comment on the results.
+
+```{r question_4f}
+pr.out <- prcomp(x)
+newdata=pr.out$x[,1:2] # select the first two principal components - there should be 60 observations in a 60x2 matrix
+
+km.out <- kmeans(newdata, 3, nstart = 20)
+table(true.labels, km.out$cluster)
+plot(x,col=(km.out$cluster+1),main="K-Means Clustering Results with K=3",xlab="",ylab="",pch=19,cex=0.5)
+```
+
+The first two principal components produce 3 perfect clusters, just like the raw data - demonstrating that most of the information in the raw data is held in the first two principal components, the eigenvectors of the matrix. 
+
+##### (g) Using the scale() function, perform K-means clustering with K = 3 on the data after scaling each variable to have standard deviation 1.0. How do these results compare to those obtained in (b)? Explain.
+
+```{r question_4g}
+km.out <- kmeans(scale(x), 3, nstart = 20)
+plot(x,col=(km.out$cluster+1),main="K-Means Clustering Results with K=3, scaled",xlab="",ylab="",pch=19,cex=0.5)
+table(true.labels, km.out$cluster)
+```
+
+I seem to get the same results as (b) - surely they should be different, as scaling affects the distance between the variables?
+
 
 
 
